@@ -1,5 +1,7 @@
 # electron-youtube-upload
 Use the Youtube-API to upload videos in an electron application
+Based on this example: https://quanticdev.com/articles/automating-my-youtube-uploads-using-nodejs/
+(The original example .js file is located inside unused-files\youtube-upload.js)
 
 # Setup:
 To run this repo you will need an `auth.json` file placed in the root of this project.
