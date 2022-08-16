@@ -2,6 +2,11 @@
 Use the Youtube-API to upload videos in an electron application
 
 # Setup:
+To run this repo you will need an `auth.json` file placed in the root of this project.
+    - Open google cloud, go to APIs & Services page, and click on Credentials, on the left
+    - Add a new OAuth 2.0 Client ID of Type=Desktop
+    - Download json file
+
 Clone repo
 Run `npm i`
 Run `npm start`

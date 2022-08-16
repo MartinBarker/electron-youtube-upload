@@ -1,0 +1,13 @@
+{
+    "installed": {
+        "client_id": "123123123.googleusercontent.com",
+        "project_id": "132123123",
+        "auth_uri": "132123123",
+        "token_uri": "132123123",
+        "auth_provider_x509_cert_url": "132123123",
+        "client_secret": "132123123",
+        "redirect_uris": [
+            "http://localhost"
+        ]
+    }
+}
