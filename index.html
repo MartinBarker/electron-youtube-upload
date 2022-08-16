@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <title>Hello World!</title>
+</head>
+
+<body>
+    <h1>Hello World!</h1>
+    We are using Node.js <span id="node-version"></span>,
+    Chromium <span id="chrome-version"></span>,
+    and Electron <span id="electron-version"></span>.
+
+    <div>
+        <h4>This is the start of content for youtube-upload-electron</h4>
+        <div>Does client_oauth_token.json exist: <div id="client-oauth-token-status"></div></div>
+        <div>
+            <h3>Auth</h3>
+            <div>Visit this URL and paste in the code found in the url after you log in:
+                <a href='' id="client-auth-url"></a>
+            </div>
+            <br>
+            <input id='tokenInput' type="text"></input><button id='tokenSubmit'>Submit</button>
+            <button id="clearToken">clearToken</button>
+            <hr>
+            <h3>Upload Videos</h3>
+            <input id='fileUpload' type="file" name="filefield" multiple="multiple">
+
+        </div>
+    </div>
+
+    <script src="./index.js"></script>
+</body>
+
+</html>
