@@ -184,3 +184,22 @@ function storeToken(token) {
         console.log('Token stored to ' + TOKEN_PATH);
     });
 }
+
+
+function getAllVideos(){
+    console.log('getAllVideos()')
+    try{
+        var request = google.youtube('v3').client.youtube.channels.list({
+            // mine: true indicates that we want to retrieve the channel for the authenticated user.
+            mine: true,
+            part: 'contentDetails'
+          });
+          request.execute(function(response) {
+            playlistId = response.result.channels[0].contentDetails.uploads;
+            console.log('playlistId=',playlistId)
+          });
+    }catch(err){
+        console.log(err)
+    }
+
+}

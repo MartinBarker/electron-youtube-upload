@@ -66,6 +66,12 @@ document.getElementById('fileUpload').onchange = async function (e) {
     console.log('uploadVidStatus: ', uploadVidStatus)
 };
 
+async function getAllVideos(){
+    console.log('getAllVideos()')
+    let status = await ipcRenderer.invoke('get-all-videos');
+    console.log(status)
+}
+
 //submit token button click
 document.getElementById('tokenSubmit').onclick = async function () {
     let tokenVal = document.getElementById('tokenInput').value

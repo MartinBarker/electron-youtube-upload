@@ -9,7 +9,10 @@ const { Console } = require('console');
 
 // If modifying these scopes, delete your previously saved credentials in client_oauth_token.json
 const SCOPES = [
-    'https://www.googleapis.com/auth/youtube.upload'
+    'https://www.googleapis.com/auth/youtube',
+    'https://www.googleapis.com/auth/youtube.upload',
+    'https://www.googleapis.com/auth/youtubepartner',
+    'https://www.googleapis.com/auth/youtubepartner-channel-audit'
 ];
 const TOKEN_PATH = '' + 'client_oauth_token.json';
 
@@ -39,6 +42,7 @@ async function createOauth2Client(token=null){
             const redirectUrl = credentials.installed.redirect_uris[0];
             oauth2Client = new OAuth2(clientId, clientSecret, redirectUrl);
             
+            /*
             //authenticate if token is available
             if(token){
                 console.log('createOauth2Client()  authenticating token')
@@ -46,6 +50,23 @@ async function createOauth2Client(token=null){
                 let tokenAuthRsp = await authWithToken(token)
                 console.log('createOauth2Client()  tokenAuthRsp = ', tokenAuthRsp)
             }
+            */
+
+            // Check if we have previously stored a token.
+            fs.readFile(TOKEN_PATH, async function(err, token) {
+                if (err) {
+                    console.log('err reading TOKEN_PATH (DOESNT EXIST?)')
+                    //getNewToken(oauth2Client, callback);
+                } else {
+                    console.log('local file TOKEN_PATH read fine')
+                    //oauth2Client.credentials = JSON.parse(token);
+                    //let tokenAuthRsp = await authWithToken(token)
+                    //console.log('local file TOKEN_PATH read fine, tokenAuthRsp = ', tokenAuthRsp)
+                    
+                    //oauth2Client.credentials = JSON.parse(token);
+                    //callback(oauth2Client);
+                }
+            });
 
             console.log('createOauth2Client() done, oauth2Client = ',oauth2Client)
             resolve('createOauth2Client() done, oauth2Client = ',oauth2Client)
@@ -77,6 +98,8 @@ async function authWithToken(code) {
             }
             console.log('authWithToken() got token=',token)
             oauth2Client.credentials = token;
+            //store local token copy
+            storeToken(token);
             resolve(token);
         })
     });
@@ -121,7 +144,66 @@ async function uploadVideo(vidFilepath, auth, title, description, tags) {
     })
 }
 
+async function getAllVideos() {
+    return new Promise(async function (resolve, reject) {
+
+        try{
+            google.youtube('v3').channels.list({
+                // mine: true indicates that we want to retrieve the channel for the authenticated user.
+                auth: oauth2Client,
+                mine: true,
+                part: 'contentDetails'
+            }, function (err, response) {
+                if (err) {
+                    console.log('getAllVideos() err: ' + err);
+                    console.log(response)
+                }
+                console.log('success, response=')
+                console.log('------------\n', response.data.items, '------------\n')
+                playlistId = response.data.items[0].id
+                console.log('playlistId=', playlistId)
+                //resolve(playlistId)
+
+                //now get uploaded videos
+                google.youtube('v3').playlistItems.list({
+                //var request = gapi.client.youtube.playlistItems.list({
+                    auth: oauth2Client,
+                    playlistId: playlistId,
+                    part: 'snippet',
+                }, function (err, response) {
+                    if (err) {
+                        console.log('get uploaded videos err: ' + err);
+                        console.log(response)
+                    }
+
+                    console.log('get uploaded videos: response=',response)
+                    // Go through response.result.playlistItems to view list of uploaded videos.
+                    resolve('gotem')
+                })
+
+
+            });
+        }catch(err){
+            console.log(err)
+            resolve(err)
+        }
+    });
+}
+
+/**
+ * Store token to disk be used in later program executions.
+ *
+ * @param {Object} token The token to store to disk.
+ */
+ function storeToken(token) {
+    fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
+      if (err) throw err;
+      console.log('Token stored to ' + TOKEN_PATH);
+    });
+  }
+
 module.exports = {
-    generateUrl, uploadVideo, createOauth2Client, authWithToken
+    generateUrl, uploadVideo, createOauth2Client, authWithToken, getAllVideos
 
 }
+

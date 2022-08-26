@@ -69,3 +69,9 @@ ipcMain.handle('upload-video', async (event, vidFilepath, vidInfo, authToken, ) 
     return vidStatus
 })
 
+
+ipcMain.handle('get-all-videos', async () => {
+    console.log('get-all-videos')
+    let status = await ytAuth.getAllVideos()
+    return status
+})
